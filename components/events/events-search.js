@@ -2,8 +2,15 @@ import Button from '../ui/button';
 import classes from './events-search.module.css';
 
 function EventsSearch(props) {
+  function submitHandler(event) {
+    event.preventDefault();
+    const selectedYear = event.target.year.value;
+    const selectedMonth = event.target.month.value;
+    props.onSearch(selectedYear, selectedMonth);
+  }
+
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={submitHandler}>
       <div className={classes.controls}>
         <div className={classes.control}>
           <label htmlFor="year">Year</label>
