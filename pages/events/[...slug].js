@@ -1,18 +1,18 @@
 import { useRouter } from 'next/router';
-import { getFilteredEvents } from '../../helpers/api-util';
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
 import Button from '../../components/ui/button';
 import ErrorAlert from '../../components/ui/error-alert';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 
-function FilteredEventsPage(props) {
+function FilteredEventsPage() {
   const [events, setEvents] = useState(null);
   const router = useRouter();
   const filterData = router.query.slug;
 
-  const { data, isLoading, error } = useSWR(
+  const { data, error } = useSWR(
     'https://nextjs-course-b9d37-default-rtdb.europe-west1.firebasedatabase.app/events.json',
     (url) => fetch(url).then((res) => res.json())
   );
@@ -30,7 +30,7 @@ function FilteredEventsPage(props) {
     }
   }, [data]);
 
-  if (!filterData) {
+  if (!filterData || !events) {
     return <p className="center">Loading...</p>;
   }
 
@@ -84,6 +84,13 @@ function FilteredEventsPage(props) {
 
   return (
     <>
+      <Head>
+        <title>Filtered Events</title>
+        <meta
+          name="description"
+          content={`All events for ${numYear} / ${numMonth}`}
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList events={filteredEvents} />
     </>
